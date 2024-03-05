@@ -1,12 +1,13 @@
 package org.example.productservice.controllers;
 
+import org.example.productservice.dtos.ExceptionDto;
+import org.example.productservice.exceptions.ProductNotFoundException;
+import org.example.productservice.models.Product;
 import org.example.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,16 +35,22 @@ public void setProductService(ProductService productService){
         this.productService = productService;
     }
     @GetMapping("/{id}")
-    public String getProductById(@PathVariable("id") Long id){
+    public Product getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
         //return "Fetching product with id " + id;
+        System.out.println("====>>>>>>>>>>>>  Inside Controller of getProductById");
         return productService.getProductById(id);
     }
 
-    @GetMapping("/")
-    public List<String> getAllProducts(){
-        return Collections.emptyList();
+    @GetMapping()
+    public List<Product> getAllProducts(){
+        System.out.println("====>>>>>>>>>>>>  Inside Controller of getAllProducts");
+        return productService.getAllProducts();
     }
 
+    @PostMapping
+    public Product createProduct(@RequestBody Product product){
+        return productService.addProduct(product);
+    }
 
 }
 
