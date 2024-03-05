@@ -52,7 +52,10 @@ public class FakeProductServiceImpl  implements  ProductService {
     }
 
     @Override
-    public void deleteProductById() {
+    public void deleteProductById(Long id) {
+        System.out.println("====>>>>>>>>>>>>  Inside DELETE = Fake Product Service of deleteProductById");
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        restTemplate.delete(SPECIFIC_PRODUCT_URL, id);
 
     }
 

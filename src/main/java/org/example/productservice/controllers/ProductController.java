@@ -1,12 +1,11 @@
 package org.example.productservice.controllers;
 
-import org.example.productservice.dtos.ExceptionDto;
+
 import org.example.productservice.exceptions.ProductNotFoundException;
 import org.example.productservice.models.Product;
 import org.example.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -50,6 +49,12 @@ public void setProductService(ProductService productService){
     @PostMapping
     public Product createProduct(@RequestBody Product product){
         return productService.addProduct(product);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
+        System.out.println("====>>>>>>>>>>>>  Inside Controller of deleteProductById");
+        productService.deleteProductById(id);
     }
 
 }
