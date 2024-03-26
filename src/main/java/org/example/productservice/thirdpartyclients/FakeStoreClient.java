@@ -2,6 +2,7 @@ package org.example.productservice.thirdpartyclients;
 
 import org.example.productservice.dtos.FakeStoreProductDto;
 import org.example.productservice.exceptions.ProductNotFoundException;
+import org.example.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +71,8 @@ public class FakeStoreClient {
     }
 
 
-    public void updateProductById() {
-
+    public Product updateProductById(Long product) {
+        return null;
     }
+
 }

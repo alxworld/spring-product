@@ -3,11 +3,13 @@ package org.example.productservice.controllers;
 
 import org.example.productservice.exceptions.ProductNotFoundException;
 import org.example.productservice.models.Product;
+import org.example.productservice.security.services.AuthenticationService;
 import org.example.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,13 +30,21 @@ public void setProductService(ProductService productService){
 ===> 2nd reason to avoid is -> not good readability
  */
     ProductService productService;
+    AuthenticationService authenticationService;
 
     @Autowired
-    public ProductController(@Qualifier("FakeProductService") ProductService productService){
+    public ProductController(@Qualifier("SelfProductService") ProductService productService, AuthenticationService authenticationService){
         this.productService = productService;
+        this.authenticationService = authenticationService;
     }
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
+    public Product getProductById(@RequestHeader("AuthToken") String token,
+                                  @PathVariable("id") Long id)
+            throws ProductNotFoundException, AccessDeniedException {
+        // first check with auth with the token
+        if (!authenticationService.authentiacate(token)) {
+            throw new AccessDeniedException("You are not authorised buddy.");
+        }
         //return "Fetching product with id " + id;
         System.out.println("====>>>>>>>>>>>>  Inside Controller of getProductById");
         return productService.getProductById(id);
@@ -55,6 +65,12 @@ public void setProductService(ProductService productService){
     public void deleteProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
         System.out.println("====>>>>>>>>>>>>  Inside Controller of deleteProductById");
         productService.deleteProductById(id);
+    }
+
+    @PostMapping("/{id}")
+    public Product updateProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
+        System.out.println("====>>>>>>>>>>>>  Inside Controller of updateProductById");
+        return productService.updateProductById(id);
     }
 
 }
